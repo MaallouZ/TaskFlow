@@ -22,6 +22,14 @@ export async function getOneTask(ownerId, taskId) {
     return Task.findOne(filter)
 }
 
+export async function searchTasks(ownerId, { status, priority, deadline } = {}) {
+    const filter = { ownerId };
+    if (status) filter.status = status;
+    if (priority) filter.priority = priority;
+    if (deadline) filter.deadline = deadline;
+    return Task.find(filter);
+}
+
 export async function updateTask(ownerId, taskId, taskData) {
     return Task.findOneAndUpdate(
         {

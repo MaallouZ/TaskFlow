@@ -8,3 +8,4 @@ taskRouter.get('/', taskController.getAllTasks);
 taskRouter.get('/:taskId', taskController.getTaskById);
 taskRouter.patch('/:taskId', taskController.updateTask);
 taskRouter.delete('/:taskId', taskController.deleteTask);
+taskRouter.get('/search', taskController.searchTasks);

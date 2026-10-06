@@ -25,6 +25,14 @@ export async function getTaskById(request, response) {
     return response.status(200).json({message: "Todo récupérée : ", task})
 }
 
+export async function searchTasks(request, response) {
+    const tasks = await taskService.searchTasks(
+        request.userId,
+        request.query
+    )
+    return response.status(200).json({ message: "Todos trouvées : ", tasks: tasks })
+}
+
 export async function updateTask(request, response) {
     const updatedTask = await taskService.updateTask(
         request.userId,
