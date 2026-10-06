@@ -9,6 +9,7 @@ import {
   deleteTask,
   getOneTask,
   listTasks,
+  searchTasks,
   updateTask,
 } from '../src/services/taskService.js';
 
@@ -143,6 +144,58 @@ describe('getOneTask', () => {
     const task = await getOneTask(aliceId, unknownId);
 
     assert.equal(task, null);
+  });
+});
+
+describe('searchTasks', () => {
+  test('filtre par statut, priorité et deadline', async () => {
+    const deadline = new Date('2026-12-31T00:00:00.000Z');
+
+    await createTask(aliceId, {
+      title: 'Préparer la démo',
+      status: 'doing',
+      priority: 'high',
+      deadline,
+    });
+    await createTask(aliceId, {
+      title: 'Tâche similaire',
+      status: 'doing',
+      priority: 'low',
+      deadline,
+    });
+    await createTask(aliceId, {
+      title: 'Tâche d’un autre jour',
+      status: 'doing',
+      priority: 'high',
+      deadline: new Date('2027-01-01T00:00:00.000Z'),
+    });
+
+    const tasks = await searchTasks(aliceId, {
+      status: 'doing',
+      priority: 'high',
+      deadline,
+    });
+
+    assert.equal(tasks.length, 1);
+    assert.equal(tasks[0].title, 'Préparer la démo');
+  });
+
+  test('ne retourne pas les tâches d’un autre propriétaire', async () => {
+    await createTask(aliceId, { title: 'Tâche Alice', priority: 'high' });
+    await createTask(bobId, { title: 'Tâche Bob', priority: 'high' });
+
+    const tasks = await searchTasks(aliceId, { priority: 'high' });
+
+    assert.equal(tasks.length, 1);
+    assert.equal(tasks[0].title, 'Tâche Alice');
+  });
+
+  test('retourne une liste vide si aucun critère ne correspond', async () => {
+    await createTask(aliceId, { title: 'Tâche à faire', status: 'todo' });
+
+    const tasks = await searchTasks(aliceId, { status: 'done' });
+
+    assert.deepEqual(tasks, []);
   });
 });
 

@@ -17,6 +17,7 @@
     "mongoose": "^9.10.4"
   },
   "devDependencies": {
+    "mongodb-memory-server": "^11.3.0",
     "supertest": "^7.1.4"
   }
 }
