@@ -11,6 +11,17 @@ function handleError(error, response) {
     throw error
 }
 
+export async function getCurrentUser(request, response) {
+    try {
+        const user = await userService.getUserById(request.user._id)
+        if (!user) return response.status(404).json({ message: "Utilisateur introuvable" })
+        return response.status(200).json({ message: "Utilisateur récupéré : ", user: user })
+    } catch (error) {
+        return handleError(error, response)
+    }
+
+}
+
 export async function getAllUsers(_request, response) {
     const users = await userService.listUsers()
     return response.status(200).json({ message: "Utilisateurs récupérés : ", users: users })
