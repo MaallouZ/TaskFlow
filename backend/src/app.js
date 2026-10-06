@@ -5,6 +5,7 @@ import { config } from './config/env.js';
 import { taskRouter } from './routes/taskRoutes.js';
 import { userRouter } from './routes/userRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
+import { habitRouter } from './routes/habitRoutes.js';
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.get('/api/health', (_request, response) => {
 app.use('/api/tasks', taskRouter);
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/habits', habitRouter);
 
 export default app;
