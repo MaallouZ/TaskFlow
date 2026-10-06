@@ -5,7 +5,9 @@ export const STATUS_LABELS = {
   done: 'Terminé',
 };
 
-// badge du statut (couleur dans le css)
-export default function StatusBadge({ status }) {
-  return <span className={`badge badge-${status}`}>{STATUS_LABELS[status] ?? status}</span>;
+// pastille du statut
+function StatusBadge({ status }) {
+  return <span className={`badge badge-${status}`}>{STATUS_LABELS[status]}</span>;
 }
+
+export default StatusBadge;
