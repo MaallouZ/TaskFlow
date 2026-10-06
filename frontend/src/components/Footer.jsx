@@ -1,3 +1,5 @@
-export default function Footer() {
+function Footer() {
   return <footer className="footer">TaskFlow — projet Full Stack JS, EFREI</footer>;
 }
+
+export default Footer;
