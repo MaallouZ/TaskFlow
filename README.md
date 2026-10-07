@@ -2,6 +2,8 @@
 
 Point de départ minimal pour les projets étudiants du module Full Stack JS.
 
+Détails du frontend (pages, choix techniques, tests) : voir [frontend/README.md](frontend/README.md).
+
 ## Prérequis
 
 - Node.js 20 ou plus récent ;
