@@ -6,9 +6,10 @@ import TaskList from '../components/TaskList.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import { deleteTask, getTasks } from '../services/taskService.js';
 import { isLate } from '../utils/dates.js';
+import ActivitySection from '../components/ActivitySection.jsx';
 
 // page liste des tâches
-function TaskListPage() {
+function TaskListPage({ user}) {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState('');
 
@@ -72,6 +73,7 @@ function TaskListPage() {
       <p className="results">{visibleTasks.length} résultat(s)</p>
 
       <TaskList tasks={visibleTasks} onDelete={handleDelete} />
+      <ActivitySection user={user} refreshKey={tasks.length} />
     </section>
   );
 }
