@@ -41,7 +41,7 @@ function RegisterPage({ user, setUser }) {
 
     try {
       // inscription puis connexion
-      await register({ username: form.username.trim(), email: form.email.trim().toLowerCase(), password: form.password });
+      await register({ username: form.username.trim(), email: form.email.trim().toLowerCase(), password: form.password, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone });
       const token = await login(form.username.trim(), form.password);
       setToken(token);
       setUser(await getMe());

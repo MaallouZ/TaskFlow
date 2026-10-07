@@ -16,11 +16,12 @@ export async function createUser({ username, email, password }) {
     return safeUser
 }
 
-export function updateUser(id, { username, email, password }) {
+export function updateUser(id, { username, email, password, timezone }) {
     const updates = {}
     if (username !== undefined) updates.username = username
     if (email !== undefined) updates.email = email
     if (password !== undefined) updates.password = password
+    if (timezone !== undefined) updates.timezone = timezone
     return User.findByIdAndUpdate(id, updates, { new: true, runValidators: true }).select(HIDDEN_FIELDS)
 }
 
