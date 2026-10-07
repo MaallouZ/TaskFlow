@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import TaskListPage from './pages/TaskListPage.jsx';
 import TaskFormPage from './pages/TaskFormPage.jsx';
+import HabitListPage from './pages/HabitListPage.jsx';
+import HabitFormPage from './pages/HabitFormPage.jsx';
 import AccountPage from './pages/AccountPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import { clearToken, getToken } from './services/api.js';
@@ -56,6 +58,9 @@ function App() {
           <Route path="/tasks" element={<ProtectedRoute user={user}><TaskListPage /></ProtectedRoute>} />
           <Route path="/tasks/new" element={<ProtectedRoute user={user}><TaskFormPage /></ProtectedRoute>} />
           <Route path="/tasks/:id/edit" element={<ProtectedRoute user={user}><TaskFormPage /></ProtectedRoute>} />
+          <Route path="/habits" element={<ProtectedRoute user={user}><HabitListPage user={user} /></ProtectedRoute>} />
+          <Route path="/habits/new" element={<ProtectedRoute user={user}><HabitFormPage /></ProtectedRoute>} />
+          <Route path="/habits/:id/edit" element={<ProtectedRoute user={user}><HabitFormPage /></ProtectedRoute>} />
           <Route
             path="/account"
             element={<ProtectedRoute user={user}><AccountPage user={user} setUser={setUser} onLogout={handleLogout} /></ProtectedRoute>}

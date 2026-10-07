@@ -1,5 +1,7 @@
-// filtres : statut (avec "en retard") + recherche
-function TaskFilters({ status, setStatus, search, setSearch }) {
+import { PRIORITY_LABELS } from './PriorityBadge.jsx';
+
+// filtres : statut (avec "en retard") + priorité + recherche
+function TaskFilters({ status, setStatus, priority, setPriority, search, setSearch }) {
   const buttons = [
     { value: 'all', label: 'Toutes' },
     { value: 'todo', label: 'À faire' },
@@ -22,6 +24,14 @@ function TaskFilters({ status, setStatus, search, setSearch }) {
           </button>
         ))}
       </div>
+
+      {/* filtre par priorité */}
+      <select className="select" value={priority} onChange={(e) => setPriority(e.target.value)} aria-label="Priorité">
+        <option value="all">Toutes priorités</option>
+        {Object.keys(PRIORITY_LABELS).map((p) => (
+          <option key={p} value={p}>Priorité {PRIORITY_LABELS[p].toLowerCase()}</option>
+        ))}
+      </select>
 
       <input
         className="search"

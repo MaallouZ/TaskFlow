@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import StatusBadge from './StatusBadge.jsx';
-import { formatShortDate, isDueToday, isLate } from '../utils/dates.js';
+import PriorityBadge from './PriorityBadge.jsx';
+import { formatLongDate, formatShortDate, isDueToday, isLate } from '../utils/dates.js';
 
 // liste des tâches (une carte par tâche)
 function TaskList({ tasks, onDelete }) {
@@ -15,9 +16,13 @@ function TaskList({ tasks, onDelete }) {
           <div className="task-main">
             <p className="task-title">{task.title}</p>
             {task.description && <p className="task-desc">{task.description}</p>}
+            {task.status === 'done' && task.completedAt && (
+              <p className="task-done-on">Terminée le {formatLongDate(task.completedAt)}</p>
+            )}
           </div>
 
           <div className="task-meta">
+            <PriorityBadge priority={task.priority} />
             <StatusBadge status={task.status} />
 
             {/* date d'échéance */}

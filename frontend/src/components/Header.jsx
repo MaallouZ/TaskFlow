@@ -17,6 +17,7 @@ function Header({ user, onLogout }) {
         {user ? (
           <ul className="nav">
             <li><NavLink to="/tasks">Tâches</NavLink></li>
+            <li><NavLink to="/habits">Habitudes</NavLink></li>
             <li className="nav-user">
               <NavLink to="/account" className="nav-name">{user.username}</NavLink>
               <button type="button" className="btn-logout" onClick={onLogout}>Déconnexion</button>
