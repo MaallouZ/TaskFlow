@@ -1,0 +1,32 @@
+# lance les tests automatiquement sur GitHub
+name: Tests
+
+# quand ? à chaque push et à chaque pull request
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest # un ordinateur Linux prêté par GitHub
+
+    steps:
+      # 1. récupérer le code du projet
+      - uses: actions/checkout@v4
+
+      # 2. installer Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. installer les paquets (comme npm install)
+      - run: npm ci
+
+      # 4. tests du back (base MongoDB en mémoire, pas besoin de .env)
+      - name: Tests backend
+        run: npm test --workspace backend
+
+      # 5. tests du front (Vitest)
+      - name: Tests frontend
+        run: npm test --workspace frontend
