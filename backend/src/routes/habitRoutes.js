@@ -1,7 +1,9 @@
-import Router from 'express';
+import {Router} from 'express';
 import * as habitController from '../controllers/habitController.js';
+import { requireAuth } from '../middlewares/requireAuth.js';
 
 export const habitRouter = Router();
+habitRouter.use(requireAuth);
 
 habitRouter.post('/', habitController.createHabit);
 habitRouter.get('/', habitController.getAllHabits);

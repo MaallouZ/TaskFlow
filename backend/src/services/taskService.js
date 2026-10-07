@@ -1,6 +1,14 @@
 import mongoose from 'mongoose'
 import { Task } from '../models/Task.js'
 
+const PROTECTED_FIELDS = ['ownerId', 'completedAt'];
+
+function withoutProtectedFields(data) {
+    const clean = { ...data };
+    for (const field of PROTECTED_FIELDS) delete clean[field];
+    return clean;
+}
+
 export function listTasks(ownerId, { status } = {}) {
     const filter = { ownerId };
     if (status) filter.status = status;
@@ -8,8 +16,10 @@ export function listTasks(ownerId, { status } = {}) {
 }
 
 export async function createTask(ownerId, taskData) {
+    const data = withoutProtectedFields(taskData);
+    if (data.status === 'done') data.completedAt = new Date();
     const task = Task.create({ 
-        ...taskData, ownerId 
+        ...data, ownerId 
     });
     return task;
 }
@@ -31,18 +41,20 @@ export async function searchTasks(ownerId, { status, priority, deadline } = {}) 
 }
 
 export async function updateTask(ownerId, taskId, taskData) {
+    const changes = withoutProtectedFields(taskData);
+    const current = await Task.findOne({ _id: taskId, ownerId });
+    if (!current) return null;
+
+    const update = { $set: changes };
+    if (changes.status === 'done' && current.status !== 'done') {
+        update.$set.completedAt = new Date();
+    } else if (changes.status && current.status === 'done') {
+        update.$unset = { completedAt: '' };
+    }
     return Task.findOneAndUpdate(
-        {
-            _id: taskId,
-            ownerId
-        },
-        {
-            $set: taskData
-        },
-        {
-            new:true,
-            runValidators:true
-        }
+        { _id: taskId, ownerId },
+        update,
+        { new: true, runValidators: true }
     );
 }
 
