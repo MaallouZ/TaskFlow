@@ -7,6 +7,8 @@ import { userRouter } from './routes/userRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
 import { habitRouter } from './routes/habitRoutes.js';
 import { statsRouter } from './routes/statsRoutes.js';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './docs/swagger.js';
 
 const app = express();
 
@@ -28,4 +30,6 @@ app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/habits', habitRouter);
 app.use('/api/stats', statsRouter);
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 export default app;
