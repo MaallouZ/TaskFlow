@@ -1,4 +1,4 @@
-import Router from 'express';
+import { Router } from 'express';
 import * as habitController from '../controllers/habitController.js';
 
 export const habitRouter = Router();

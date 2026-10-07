@@ -1,3 +1,5 @@
+import * as habitService from '../services/habitService.js';
+
 export async function createHabit(request, response) {
     const habit = await habitService.createHabit(request.userId, request.body);
     return response.status(201).json({ message: "Habitude créée : ", habit });
