@@ -15,6 +15,7 @@ function TaskListPage({ user}) {
 
   // filtres
   const [status, setStatus] = useState('all');
+  const [priority, setPriority] = useState('all');
   const [search, setSearch] = useState('');
 
   // récupération des tâches
@@ -42,6 +43,7 @@ function TaskListPage({ user}) {
       if (status === 'late') return isLate(t);
       return t.status === status;
     })
+    .filter((t) => priority === 'all' || t.priority === priority)
     .filter((t) => t.title.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => (a.deadline || '').localeCompare(b.deadline || ''));
 
@@ -63,6 +65,8 @@ function TaskListPage({ user}) {
       <TaskFilters
         status={status}
         setStatus={setStatus}
+        priority={priority}
+        setPriority={setPriority}
         search={search}
         setSearch={setSearch}
       />

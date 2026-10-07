@@ -4,15 +4,22 @@ import Card from '../components/Card.jsx';
 import Input from '../components/Input.jsx';
 import Button from '../components/Button.jsx';
 import StatusPicker from '../components/StatusPicker.jsx';
+import OptionPicker from '../components/OptionPicker.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import { createTask, getTask, updateTask } from '../services/taskService.js';
+
+const PRIORITIES = [
+  { value: 'low', label: 'Basse' },
+  { value: 'medium', label: 'Moyenne' },
+  { value: 'high', label: 'Haute' },
+];
 
 // même page pour créer et modifier une tâche
 function TaskFormPage() {
   const { id } = useParams(); // id dans l'url si on modifie
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ title: '', description: '', status: 'todo', deadline: '' });
+  const [form, setForm] = useState({ title: '', description: '', status: 'todo', priority: 'medium', deadline: '' });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
 
@@ -25,6 +32,7 @@ function TaskFormPage() {
           title: task.title,
           description: task.description || '',
           status: task.status,
+          priority: task.priority || 'medium',
           deadline: task.deadline ? task.deadline.slice(0, 10) : '',
         })
       )
@@ -69,6 +77,7 @@ function TaskFormPage() {
         <form className="form" onSubmit={handleSubmit}>
           <Input id="title" label="Titre" value={form.title} onChange={handleChange} error={errors.title} placeholder="Ex. Préparer la soutenance" />
           <StatusPicker value={form.status} onChange={handleChange} />
+          <OptionPicker label="Priorité" name="priority" options={PRIORITIES} value={form.priority} onChange={handleChange} />
           <Input id="description" label="Description" optional multiline value={form.description} onChange={handleChange} placeholder="Détails, liens, étapes…" />
           <Input id="deadline" label="Échéance" type="date" value={form.deadline} onChange={handleChange} error={errors.deadline} />
 
