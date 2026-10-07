@@ -6,6 +6,7 @@ import { taskRouter } from './routes/taskRoutes.js';
 import { userRouter } from './routes/userRoutes.js';
 import { authRouter } from './routes/authRoutes.js';
 import { habitRouter } from './routes/habitRoutes.js';
+import { statsRouter } from './routes/statsRoutes.js';
 
 const app = express();
 
@@ -26,5 +27,5 @@ app.use('/api/tasks', taskRouter);
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/habits', habitRouter);
-
+app.use('/api/stats', statsRouter);
 export default app;

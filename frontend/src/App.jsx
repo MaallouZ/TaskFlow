@@ -53,7 +53,7 @@ function App() {
           <Route path="/register" element={<RegisterPage user={user} setUser={setUser} />} />
 
           {/* pages connectées */}
-          <Route path="/tasks" element={<ProtectedRoute user={user}><TaskListPage /></ProtectedRoute>} />
+          <Route path="/tasks" element={<ProtectedRoute user={user}><TaskListPage user={user} /></ProtectedRoute>} />
           <Route path="/tasks/new" element={<ProtectedRoute user={user}><TaskFormPage /></ProtectedRoute>} />
           <Route path="/tasks/:id/edit" element={<ProtectedRoute user={user}><TaskFormPage /></ProtectedRoute>} />
           <Route
