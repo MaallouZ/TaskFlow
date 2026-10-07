@@ -15,12 +15,13 @@ export const swaggerSpec = {
         securitySchemes: {
             bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
         },
-        schemas: { ...authSchemas, ...userSchemas },
+        schemas: { ...authSchemas, ...userSchemas, ...taskSchemas },
     },
     tags: [
         { name: 'Health' },
         { name: 'Auth' },
         { name: 'Users' },
+        { name: 'Tasks' },
     ],
-    paths: { ...healthPaths, ...authPaths, ...userPaths },
+    paths: { ...healthPaths, ...authPaths, ...userPaths, ...taskPaths },
 }
