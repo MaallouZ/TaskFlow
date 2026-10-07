@@ -10,8 +10,11 @@ const taskSchema = new mongoose.Schema(
         deadline: { type: Date },
         ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
         priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
+        completedAt: { type: Date },
     },
     { timestamps: true }
 )
+
+taskSchema.index({ ownerId: 1, status: 1, completedAt: 1 });
 
 export const Task = mongoose.model('Task', taskSchema);

@@ -9,6 +9,8 @@ import { deleteUser, updateUser } from '../services/userService.js';
 import { formatLongDate } from '../utils/dates.js';
 import { isValidEmail } from '../utils/validation.js';
 
+const TIME_ZONES = [...new Set(['UTC', ...Intl.supportedValuesOf('timeZone')])];
+
 // page mon compte
 function AccountPage({ user, setUser, onLogout }) {
   const [editing, setEditing] = useState(false);
@@ -20,6 +22,17 @@ function AccountPage({ user, setUser, onLogout }) {
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  async function handleTimezoneChange(e) {
+    setError('');
+    try {
+      const updated = await updateUser(user._id, { timezone: e.target.value });
+      setUser(updated);
+      setSuccess('Fuseau horaire enregistré.');
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   // enregistrer les modifications
@@ -73,6 +86,13 @@ function AccountPage({ user, setUser, onLogout }) {
               <p><span>Nom d’utilisateur</span>{user.username}</p>
               <p><span>Email</span>{user.email}</p>
               {user.createdAt && <p><span>Membre depuis</span>{formatLongDate(user.createdAt)}</p>}
+              <p>
+                <span>Fuseau horaire</span>
+                <select className="select-inline" value={user.timezone} onChange={handleTimezoneChange} aria-label="Fuseau horaire">
+                  {!TIME_ZONES.includes(user.timezone) && <option value={user.timezone}>{user.timezone}</option>}
+                  {TIME_ZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
+                </select>
+              </p>
             </div>
             <div className="form-actions">
               <Button variant="ghost" onClick={() => setEditing(true)}>Modifier</Button>

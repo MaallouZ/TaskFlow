@@ -9,7 +9,7 @@ function httpError(status, message) {
     return error;
 }
 
-export async function register({ username, email, password } = {}) {
+export async function register({ username, email, password, timezone } = {}) {
     if (!username || !email || !password) {
         throw httpError(400, "username, email and password are required");
     }
@@ -17,8 +17,8 @@ export async function register({ username, email, password } = {}) {
         throw httpError(409, "Username or email already exists");
     }
     const passwordHash = await bcrypt.hash(password, 10)
-    const user = await User.create({ username, email, password: passwordHash });
-    return { _id: user._id, username: user.username, email: user.email }
+    const user = await User.create({ username, email, password: passwordHash, timezone });
+    return { _id: user._id, username: user.username, email: user.email, timezone: user.timezone }
 }
 
 export async function login({ username, password } = {}) {
