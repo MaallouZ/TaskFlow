@@ -1,0 +1,29 @@
+services:
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: ./backend
+    # JWT_SECRET (et le reste) vient du .env du backend
+    env_file: ./backend/.env
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo:27017/devfullstack
+      CORS_ORIGIN: http://localhost:8080
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    # nginx sert le build et renvoie /api vers le backend
+    ports:
+      - 8080:80
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
