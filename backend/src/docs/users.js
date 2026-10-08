@@ -7,6 +7,7 @@ export const userSchemas = {
             username: { type: 'string', maxLength: 30, example: 'alice' },
             email: { type: 'string', maxLength: 100, example: 'alice@example.com' },
             password: { type: 'string', example: 'secret123' },
+            timezone: { type: 'string', description: 'Fuseau horaire IANA', example: 'Europe/Paris' },
         },
     },
 }
