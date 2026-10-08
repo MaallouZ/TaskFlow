@@ -3,6 +3,7 @@ import { authPaths, authSchemas } from './auth.js'
 import { userPaths, userSchemas } from './users.js'
 import { taskPaths, taskSchemas } from './tasks.js'
 import { habitPaths, habitSchemas } from './habits.js'
+import { statsPaths, statsSchemas } from './stats.js'
 
 export const swaggerSpec = {
     openapi: '3.0.3',
@@ -15,7 +16,7 @@ export const swaggerSpec = {
         securitySchemes: {
             bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
         },
-        schemas: { ...authSchemas, ...userSchemas, ...taskSchemas, ...habitSchemas },
+        schemas: { ...authSchemas, ...userSchemas, ...taskSchemas, ...habitSchemas, ...statsSchemas },
     },
     tags: [
         { name: 'Health' },
@@ -23,6 +24,7 @@ export const swaggerSpec = {
         { name: 'Users' },
         { name: 'Tasks' },
         { name: 'Habits' },
+        { name: 'Stats' },
     ],
-    paths: { ...healthPaths, ...authPaths, ...userPaths, ...taskPaths, ...habitPaths },
+    paths: { ...healthPaths, ...authPaths, ...userPaths, ...taskPaths, ...habitPaths, ...statsPaths },
 }
