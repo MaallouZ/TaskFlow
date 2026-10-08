@@ -8,4 +8,5 @@ const port = Number(process.env.PORT) || 3000;
 
 app.listen(port, () => {
   console.log(`API disponible sur http://localhost:${port}`);
+  console.log(`Swagger disponible sur http://localhost:${port}/api/docs`);
 });
