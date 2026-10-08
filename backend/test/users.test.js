@@ -1,10 +1,14 @@
 import { after, before, beforeEach, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
+import jwt from 'jsonwebtoken';
 import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import app from '../src/app.js';
+import { config } from '../src/config/env.js';
 import { connectDb, disconnectDb } from '../src/config/db.js';
 import User from '../src/models/User.js';
+
+config.jwtSecret ??= 'test-secret';
 
 let mongo;
 
@@ -26,9 +30,11 @@ beforeEach(async () => {
 const alice = { username: 'alice', email: 'alice@example.com', password: 'secret123' };
 const unknownId = '507f1f77bcf86cd799439011';
 
+const auth = `Bearer ${jwt.sign({ _id: unknownId }, config.jwtSecret, { expiresIn: '1h' })}`;
+
 describe('POST /api/users', () => {
   test('crée un utilisateur et ne renvoie pas le mot de passe', async () => {
-    const response = await request(app).post('/api/users').send(alice);
+    const response = await request(app).post('/api/users').set('Authorization', auth).send(alice);
 
     assert.equal(response.status, 201);
     assert.equal(response.body.user.username, 'alice');
@@ -38,7 +44,7 @@ describe('POST /api/users', () => {
   });
 
   test('retourne 400 si un champ requis manque', async () => {
-    const response = await request(app).post('/api/users').send({ username: 'alice' });
+    const response = await request(app).post('/api/users').set('Authorization', auth).send({ username: 'alice' });
 
     assert.equal(response.status, 400);
   });
@@ -46,7 +52,7 @@ describe('POST /api/users', () => {
   test('retourne 409 si le username ou l\'email existe déjà', async () => {
     await User.create(alice);
 
-    const response = await request(app).post('/api/users').send(alice);
+    const response = await request(app).post('/api/users').set('Authorization', auth).send(alice);
 
     assert.equal(response.status, 409);
   });
@@ -57,7 +63,7 @@ describe('GET /api/users', () => {
     await User.create(alice);
     await User.create({ username: 'bob', email: 'bob@example.com', password: 'secret456' });
 
-    const response = await request(app).get('/api/users');
+    const response = await request(app).get('/api/users').set('Authorization', auth);
 
     assert.equal(response.status, 200);
     assert.equal(response.body.users.length, 2);
@@ -71,7 +77,7 @@ describe('GET /api/users/:id', () => {
   test('retourne l\'utilisateur', async () => {
     const user = await User.create(alice);
 
-    const response = await request(app).get(`/api/users/${user._id}`);
+    const response = await request(app).get(`/api/users/${user._id}`).set('Authorization', auth);
 
     assert.equal(response.status, 200);
     assert.equal(response.body.user.username, 'alice');
@@ -79,13 +85,13 @@ describe('GET /api/users/:id', () => {
   });
 
   test('retourne 404 si l\'utilisateur n\'existe pas', async () => {
-    const response = await request(app).get(`/api/users/${unknownId}`);
+    const response = await request(app).get(`/api/users/${unknownId}`).set('Authorization', auth);
 
     assert.equal(response.status, 404);
   });
 
   test('retourne 400 si l\'id est invalide', async () => {
-    const response = await request(app).get('/api/users/pas-un-id');
+    const response = await request(app).get('/api/users/pas-un-id').set('Authorization', auth);
 
     assert.equal(response.status, 400);
   });
@@ -95,7 +101,7 @@ describe('PUT /api/users/:id', () => {
   test('met à jour uniquement les champs fournis', async () => {
     const user = await User.create(alice);
 
-    const response = await request(app).put(`/api/users/${user._id}`).send({ username: 'alice2' });
+    const response = await request(app).put(`/api/users/${user._id}`).set('Authorization', auth).send({ username: 'alice2' });
 
     assert.equal(response.status, 200);
     assert.equal(response.body.user.username, 'alice2');
@@ -106,13 +112,13 @@ describe('PUT /api/users/:id', () => {
   test('retourne 400 si les données sont invalides', async () => {
     const user = await User.create(alice);
 
-    const response = await request(app).put(`/api/users/${user._id}`).send({ username: 'a'.repeat(31) });
+    const response = await request(app).put(`/api/users/${user._id}`).set('Authorization', auth).send({ username: 'a'.repeat(31) });
 
     assert.equal(response.status, 400);
   });
 
   test('retourne 404 si l\'utilisateur n\'existe pas', async () => {
-    const response = await request(app).put(`/api/users/${unknownId}`).send({ username: 'x' });
+    const response = await request(app).put(`/api/users/${unknownId}`).set('Authorization', auth).send({ username: 'x' });
 
     assert.equal(response.status, 404);
   });
@@ -122,14 +128,14 @@ describe('DELETE /api/users/:id', () => {
   test('supprime l\'utilisateur', async () => {
     const user = await User.create(alice);
 
-    const response = await request(app).delete(`/api/users/${user._id}`);
+    const response = await request(app).delete(`/api/users/${user._id}`).set('Authorization', auth);
 
     assert.equal(response.status, 204);
     assert.equal(await User.findById(user._id), null);
   });
 
   test('retourne 404 si l\'utilisateur n\'existe pas', async () => {
-    const response = await request(app).delete(`/api/users/${unknownId}`);
+    const response = await request(app).delete(`/api/users/${unknownId}`).set('Authorization', auth);
 
     assert.equal(response.status, 404);
   });

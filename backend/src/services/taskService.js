@@ -48,7 +48,7 @@ export async function updateTask(ownerId, taskId, taskData) {
     const update = { $set: changes };
     if (changes.status === 'done' && current.status !== 'done') {
         update.$set.completedAt = new Date();
-    } else if (changes.status && current.status === 'done') {
+    } else if (current.status === 'done' && changes.status && changes.status !== 'done') {
         update.$unset = { completedAt: '' };
     }
     return Task.findOneAndUpdate(
